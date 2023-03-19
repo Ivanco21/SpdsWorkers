@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Profile 2": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Nanosoft\\nanoCAD x64 23.0\\nCadS.exe",
+      "commandLineArgs": " \"-b\" \"nSPDSComp\" \"-r\" \"SPDS\" \"-a\" \"nanoCAD_x64_SPDS_23.0\" \"-oleid\" \"{86A4AA43-7D22-4120-9C50-AE0ACDFE806F}",
+      "workingDirectory": "C:\\Program Files\\Nanosoft\\nanoCAD x64 23.0\\",
+      "nativeDebugging": false
+    }
+  }
+}

@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="imapimgd">
+      <HintPath>C:\Users\mne21\Desktop\NC_SDK_RU_23.0.6116.4106.6223\include-x64\imapimgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MapiBaseTypes">
+      <HintPath>C:\Users\mne21\Desktop\NC_SDK_RU_23.0.6116.4106.6223\include-x64\mapibasetypes.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mapimgd">
+      <HintPath>C:\Users\mne21\Desktop\NC_SDK_RU_23.0.6116.4106.6223\include-x64\mapimgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
