@@ -25,7 +25,10 @@ namespace NCadCustom
         [CommandMethod("CreateSpdsBySh", CommandFlags.NoCheck | CommandFlags.NoPrefix)]
         public static void MainCreateBySpreadSheet()
         {
+            string paramsFilePath = @"D:\\Code_repository\\C#\\nanoCAD\\SpdsObjBySheetInfo\\TestFiles\\Params.xlsm";
+            ShWorker shWorker = new ShWorker(paramsFilePath);
 
+            string test = "";
         }
     }
 }

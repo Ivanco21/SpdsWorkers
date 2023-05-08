@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
@@ -12,31 +13,60 @@ namespace SpdsObjBySheetInfo
     internal class ShWorker
     {
         private readonly string wbFullPath;
-        private readonly string sheetName;
+        internal List<Row> dataRows;
 
-        public ShWorker(string shPath , string sheetName) 
+        public ShWorker(string shPath) 
         {
             this.wbFullPath = shPath;
-            this.sheetName = sheetName;
-            ReadDoc();
+            this.dataRows = ReadDocRows();
         }
 
-        private void ReadDoc()
+        private List<Row> ReadDocRows()
         {
+            List<Row> resRows = new List<Row>();
+
             using (SpreadsheetDocument doc = SpreadsheetDocument.Open(wbFullPath, false))
             {
                 WorkbookPart wbPart = doc.WorkbookPart;
-                Sheet sh = wbPart.Workbook.Descendants<Sheet>().FirstOrDefault(s => s.Name == sheetName);
+                WorksheetPart shPart = wbPart.WorksheetParts.First();
 
-                if (sh == null)
+                if (shPart == null)
                 {
-                    throw new ArgumentException(sheetName);
+                    throw new ArgumentException();
                 }
 
-                Row row = sh.Descendants<Row>().LastOrDefault();
+                SheetData sheetData = shPart.Worksheet.Elements<SheetData>().First();
 
+                Cell controlCell = null;
+                CellValue controlValue = null;
+                string controlText = string.Empty;
+                foreach (Row r in sheetData.Elements<Row>())
+                {
+                    controlCell = r.Elements<Cell>().First();
+                    if (controlCell == null)
+                    {
+                        break;
+                    }
+
+                    controlValue = controlCell.CellValue;
+                    if (controlValue == null)
+                    {
+                        break;
+                    }
+
+                    controlText = controlValue.Text;
+
+                    if (controlText == string.Empty)
+                    {
+                        break;
+                    }
+
+                    resRows.Add(r);
+
+                }
 
             }
+            return resRows;
         }
     }
 }

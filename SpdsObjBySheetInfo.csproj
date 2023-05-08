@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0">
+      <GeneratePathProperty>False</GeneratePathProperty>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
