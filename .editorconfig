@@ -19,6 +19,9 @@ csharp_style_expression_bodied_local_functions = false:silent
 csharp_indent_labels = no_change
 csharp_space_around_binary_operators = before_and_after
 
+# CS8602: Dereference of a possibly null reference.
+dotnet_diagnostic.CS8602.severity = none
+
 [*.{cs,vb}]
 #### Naming styles ####
 

@@ -51,10 +51,13 @@ namespace DotNetSample
 			McParametricObject parObj = new McParametricObject(b3D);
 			parObj.DbEntity.AddToCurrentDocument();
 
-			// Установка связи параметрического объекта с объектом БД
-			// Init connection between the parametric object and the object in the DB. 
-			// "Детали крепления/Общее машиностроение/Болты/С шестигранной головкой/ГОСТ 7795-70 Исп. 1, 3, 4"
-			parObj.Initialize(0x426CA8520B06C000L);
+            // Установка связи параметрического объекта с объектом БД
+            // Init connection between the parametric object and the object in the DB. 
+            // "Детали крепления/Общее машиностроение/Болты/С шестигранной головкой/ГОСТ 7795-70 Исп. 1, 3, 4"
+            string hexString = "426CA8520B06C000";
+            long number = Convert.ToInt64(hexString, 16);
+            string hexNumber = "0x" + number.ToString("X");
+            parObj.Initialize(number);
 
 			// Установка 3-го исполнения
 			// Setup the 3'rd implementation

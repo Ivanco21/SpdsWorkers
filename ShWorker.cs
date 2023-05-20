@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Office2010.ExcelAc;
-using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace SpdsObjBySheetInfo
@@ -14,12 +7,31 @@ namespace SpdsObjBySheetInfo
     {
         private readonly string wbFullPath;
         internal List<Row> dataRows;
+        internal SharedStringTable sst; // объект необходим чтобы корректно читать строки в Open Xml
 
-        public ShWorker(string shPath) 
+        public ShWorker(string shPath)
         {
             this.wbFullPath = shPath;
             this.dataRows = ReadDocRows();
         }
+
+        internal List<string> GetHeaders(SharedStringTable sst, Row row)
+        {
+            List<string> headers = new List<string>();
+
+            foreach (var cl in row.Elements<DocumentFormat.OpenXml.Spreadsheet.Cell>())
+            {
+                if ((cl.DataType != null) && (cl.DataType == CellValues.SharedString))
+                {
+                    int ssid = int.Parse(cl.CellValue.Text);
+                    string cellValue = sst.ChildElements[ssid].InnerText;
+                    headers.Add(cellValue);
+                }
+            }
+
+            return headers;
+        }
+
 
         private List<Row> ReadDocRows()
         {
@@ -29,6 +41,9 @@ namespace SpdsObjBySheetInfo
             {
                 WorkbookPart wbPart = doc.WorkbookPart;
                 WorksheetPart shPart = wbPart.WorksheetParts.First();
+                SharedStringTablePart sstpart = wbPart.GetPartsOfType<SharedStringTablePart>().First();
+                SharedStringTable sst = sstpart.SharedStringTable;
+                this.sst = sst;
 
                 if (shPart == null)
                 {
