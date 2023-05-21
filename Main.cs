@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime;
-using Multicad.Geometry;
+using HostMgd.ApplicationServices;
 using Multicad.Runtime;
-using Multicad.Symbols.Tables;
-using Multicad.DataServices;
-using Multicad.Objects;
-using SpdsObjBySheetInfo;
+using Multicad.DatabaseServices;
 using DocumentFormat.OpenXml.Spreadsheet;
+using SpdsObjBySheetInfo;
 
 namespace NCadCustom
 {
@@ -22,33 +16,61 @@ namespace NCadCustom
         public void Terminate()
         {
         }
-
+        /// <summary>
+        /// Создание СПДС объектов на чертеже по таблице из эксель
+        /// Параметры и ID объектов находятся в эксель
+        /// </summary>
         [CommandMethod("CreateSpdsBySh", CommandFlags.NoCheck | CommandFlags.NoPrefix)]
         public static void MainCreateBySpreadSheet()
         {
-            string paramsFilePath = @"D:\\Code_repository\\C#\\nanoCAD\\SpdsObjBySheetInfo\\TestFiles\\Params.xlsm";
-            ShWorker shWorker = new ShWorker(paramsFilePath);
-            List<Row> dataRows = shWorker.dataRows;
+            InputJig jig = new InputJig();
+            HostMgd.EditorInput.Editor ed = Application.DocumentManager.MdiActiveDocument.Editor;
 
-            List<string> headers = shWorker.GetHeaders(shWorker.sst, dataRows.ElementAt(0));
-            List<ObjectForInsert> objs = new List<ObjectForInsert>();
 
-            // за исключением шапки - остальное строки с данными о деталях.
-            Row rw = new Row();
-            for (int iRow = 1; iRow < dataRows.Count; iRow++)
+            string paramsFilePath = jig.GetText("Укажите полный путь до файла параметров(Excel)", false);
+
+            if (!File.Exists(paramsFilePath))
             {
-                rw = dataRows[iRow];
-                ObjectForInsert oneObject = new ObjectForInsert(shWorker.sst, headers, rw);
-                objs.Add(oneObject);
+                ed.WriteMessage("Выбран не существующий путь! Программа завершена.");
+                return;
             }
 
-            foreach (ObjectForInsert obj in objs)
+            List<string> excelExtent = new List<string>() { ".xlsx", ".xls", ".xlsb", ".xlsm" };
+
+            if (!excelExtent.Contains(Path.GetExtension(paramsFilePath).ToLower()))
             {
-                obj.PlaceToModelSpace();
+                ed.WriteMessage("Выбран не Excel файл! Программа завершена.");
+                return;
             }
 
+            try
+            {
+                ShWorker shWorker = new ShWorker(paramsFilePath);
+                List<Row> dataRows = shWorker.dataRows;
 
+                List<string> headers = shWorker.GetHeaders(shWorker.sst, dataRows.ElementAt(0));
+                List<ObjectForInsert> objs = new List<ObjectForInsert>();
 
+                // за исключением шапки - остальное строки с данными о деталях.
+                Row rw = new Row();
+                for (int iRow = 1; iRow < dataRows.Count; iRow++)
+                {
+                    rw = dataRows[iRow];
+                    ObjectForInsert oneObject = new ObjectForInsert(shWorker.sst, headers, rw);
+                    objs.Add(oneObject);
+                }
+
+                foreach (ObjectForInsert obj in objs)
+                {
+                    obj.PlaceToModelSpace();
+                }
+
+                ed.WriteMessage("Программа успешно завершена!");
+            }
+            catch (Exception e)
+            {
+                ed.WriteMessage($"Ошибка : {e}");
+            }
         }
     }
 }

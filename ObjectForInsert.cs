@@ -10,21 +10,24 @@ namespace SpdsObjBySheetInfo
 {
     internal class ObjectForInsert
     {
+        /// <summary>
+        /// Парсинг строки эксель в объект который в дальнейшем помещается на чертеж.
+        /// Завязано на номера столбцов
+        /// </summary>
+        /// <param name="sst"></param>
+        /// <param name="headers"> названия шапок из эксель</param>
+        /// <param name="objectData">строка эксель</param>
         internal ObjectForInsert(SharedStringTable sst, List<string> headers, Row objectData)
         {
             CreateObject(sst, headers, objectData);
         }
-
         internal string dataBaseID { get; set; } //hexadecimal string 16
         internal int detailCount { get; set; }
         internal double x_coord { get; set; }
         internal double y_coord { get; set; }
         internal Dictionary<string, double> objParams { get; set; }
-
-
         private void CreateObject(SharedStringTable sst, List<string> headers, Row objectData)
         {
-            // парсинг - по номерам столбцов
             IEnumerable<Cell> cells = objectData.Elements<Cell>();
             this.objParams = new Dictionary<string, double>();
 
@@ -63,7 +66,9 @@ namespace SpdsObjBySheetInfo
                 }
             }
         }
-
+        /// <summary>
+        /// Помещение объекта на чертеж
+        /// </summary>
         internal void PlaceToModelSpace()
         {
             McParametricObject parObj = new McParametricObject(false);

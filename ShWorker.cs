@@ -15,6 +15,12 @@ namespace SpdsObjBySheetInfo
             this.dataRows = ReadDocRows();
         }
 
+        /// <summary>
+        /// Получение списка с названиям колонок - headers
+        /// </summary>
+        /// <param name="sst"></param>
+        /// <param name="row"></param>
+        /// <returns></returns>
         internal List<string> GetHeaders(SharedStringTable sst, Row row)
         {
             List<string> headers = new List<string>();
@@ -32,7 +38,11 @@ namespace SpdsObjBySheetInfo
             return headers;
         }
 
-
+        /// <summary>
+        /// чтение документа эксель
+        /// </summary>
+        /// <returns>массив строк эксель</returns>
+        /// <exception cref="ArgumentException"></exception>
         private List<Row> ReadDocRows()
         {
             List<Row> resRows = new List<Row>();
@@ -77,9 +87,7 @@ namespace SpdsObjBySheetInfo
                     }
 
                     resRows.Add(r);
-
                 }
-
             }
             return resRows;
         }

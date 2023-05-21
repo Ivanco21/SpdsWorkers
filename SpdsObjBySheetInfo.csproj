@@ -14,6 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="hostmgd">
+      <HintPath>C:\Users\mne21\Desktop\NC_SDK_RU_23.0.6116.4106.6223\include-x64\hostmgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="imapimgd">
       <HintPath>C:\Users\mne21\Desktop\NC_SDK_RU_23.0.6116.4106.6223\include-x64\imapimgd.dll</HintPath>
       <Private>False</Private>
