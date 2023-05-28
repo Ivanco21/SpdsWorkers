@@ -4,7 +4,7 @@ using HostMgd.ApplicationServices;
 using Multicad.Runtime;
 using Multicad.DatabaseServices;
 using DocumentFormat.OpenXml.Spreadsheet;
-using SpdsObjBySheetInfo;
+using NCadCustom.Code;
 
 namespace NCadCustom
 {
@@ -16,18 +16,22 @@ namespace NCadCustom
         public void Terminate()
         {
         }
+
+        static readonly string[] excelExtentions = { ".xlsx", ".xls", ".xlsb", ".xlsm" };
+
         /// <summary>
         /// Создание СПДС объектов на чертеже по таблице из эксель
         /// Параметры и ID объектов находятся в эксель
         /// </summary>
-        [CommandMethod("CreateSpdsBySh", CommandFlags.NoCheck | CommandFlags.NoPrefix)]
-        public static void MainCreateBySpreadSheet()
+        [CommandMethod("SpdsObjByExcelParams", CommandFlags.NoCheck | CommandFlags.NoPrefix)]
+        public static void MainCreateObjBySpreadSheet()
         {
             InputJig jig = new InputJig();
             HostMgd.EditorInput.Editor ed = Application.DocumentManager.MdiActiveDocument.Editor;
 
 
             string paramsFilePath = jig.GetText("Укажите полный путь до файла параметров(Excel)", false);
+            paramsFilePath = paramsFilePath.Trim('"').ToLower();
 
             if (!File.Exists(paramsFilePath))
             {
@@ -35,9 +39,7 @@ namespace NCadCustom
                 return;
             }
 
-            List<string> excelExtent = new List<string>() { ".xlsx", ".xls", ".xlsb", ".xlsm" };
-
-            if (!excelExtent.Contains(Path.GetExtension(paramsFilePath).ToLower()))
+            if (!excelExtentions.Contains(Path.GetExtension(paramsFilePath)))
             {
                 ed.WriteMessage("Выбран не Excel файл! Программа завершена.");
                 return;
@@ -65,7 +67,7 @@ namespace NCadCustom
                     obj.PlaceToModelSpace();
                 }
 
-                ed.WriteMessage("Программа успешно завершена!");
+                ed.WriteMessage("Обработано!");
             }
             catch (Exception e)
             {
